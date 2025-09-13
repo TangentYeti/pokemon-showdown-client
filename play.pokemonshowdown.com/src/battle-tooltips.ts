@@ -2151,6 +2151,9 @@ export class BattleTooltips {
 		if (move.flags['bite']) {
 			value.abilityModify(1.5, "Strong Jaw");
 		}
+		if (move.flags['sound']) {
+			value.abilityModify(1.3, "Shrill Voice");
+		}
 		if (value.value <= 60) {
 			value.abilityModify(1.5, "Technician");
 		}
