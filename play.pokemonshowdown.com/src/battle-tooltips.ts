@@ -773,6 +773,9 @@ export class BattleTooltips {
 			if ((move.recoil || move.hasCrashDamage) && ability === 'reckless') {
 				text += `<p class="movetag">&#x2713; Recoil <small>(boosted by Reckless)</small></p>`;
 			}
+			if ((move.recoil || move.hasCrashDamage) && ability === 'reinforced') {
+				text += `<p class="movetag">&#x2713; Recoil <small>(boosted by Reinforced)</small></p>`;
+			}
 			if (move.flags.bullet) {
 				text += `<p class="movetag">&#x2713; Bullet-like <small>(doesn't affect Bulletproof pokemon)</small></p>`;
 			}
@@ -1162,6 +1165,10 @@ export class BattleTooltips {
 			if (ability === 'slushrush' && (weather === 'hail' || weather === 'snowscape')) {
 				speedModifiers.push(2);
 			}
+			if (ability === 'oceansblessing' && (weather === 'raindance' || weather === 'primordialsea')) {
+						stats.def = Math.floor(stats.def * 1.3);
+						stats.spd = Math.floor(stats.spd * 1.3);
+					}
 			if (item !== 'utilityumbrella') {
 				if (weather === 'sunnyday' || weather === 'desolateland') {
 					if (ability === 'chlorophyll') {
@@ -1604,6 +1611,15 @@ export class BattleTooltips {
 			case 'snowscape':
 				moveType = 'Ice';
 				break;
+			case 'thunderstorm':
+				moveType = 'Electric';
+				break;
+			case 'strongwinds':
+				moveType = 'Flying';
+				break;
+			case 'overcast':
+				moveType = 'Ghost';
+				break;
 			}
 		}
 		if (move.id === 'terrainpulse' && pokemon.isGrounded(serverPokemon)) {
@@ -1678,6 +1694,7 @@ export class BattleTooltips {
 					if (value.abilityModify(0, 'Galvanize')) moveType = 'Electric';
 					if (value.abilityModify(0, 'Pixilate')) moveType = 'Fairy';
 					if (value.abilityModify(0, 'Refrigerate')) moveType = 'Ice';
+					if (value.abilityModify(0, 'Sinful Aura')) moveType = 'Dark';
 				}
 				if (value.abilityModify(0, 'Normalize')) moveType = 'Normal';
 			}
@@ -1766,6 +1783,10 @@ export class BattleTooltips {
 		if (['hurricane', 'thunder', 'bleakwindstorm', 'wildboltstorm', 'sandsearstorm'].includes(move.id)) {
 			value.weatherModify(0, 'Rain Dance');
 			value.weatherModify(0, 'Primordial Sea');
+			value.weatherModify(0, 'Thunderstorm');
+		}
+		if (move.type === 'water') {
+			value.abilityModify(0, 'Aquapotent');
 		}
 		value.abilityModify(0, 'No Guard');
 		if (!value.value) return value;
@@ -2103,11 +2124,17 @@ export class BattleTooltips {
 		if (!value.value) return value;
 
 		// Other ability boosts
+		if (pokemon.ability === 'exectutioner' && target && target.hp * 2 <= target.maxhp) {
+			value.abilityModify(2, 'Executioner');
+		}
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");
 		}
 		if (move.flags['punch']) {
 			value.abilityModify(1.2, 'Iron Fist');
+		}
+		if (move.flags['contact']) {
+			value.abilityModify(1.2, 'Impaler');
 		}
 		if (move.flags['pulse']) {
 			value.abilityModify(1.5, "Mega Launcher");
@@ -2161,6 +2188,7 @@ export class BattleTooltips {
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Galvanize");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Pixilate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Refrigerate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Sinful Aura");
 			}
 			if (this.battle.gen > 6) {
 				value.abilityModify(1.2, "Normalize");
@@ -2168,6 +2196,7 @@ export class BattleTooltips {
 		}
 		if (move.recoil || move.hasCrashDamage) {
 			value.abilityModify(1.2, 'Reckless');
+			value.abilityModify(1.2, 'Reinforced');			
 		}
 
 		if (move.category !== 'Status') {
@@ -2188,6 +2217,8 @@ export class BattleTooltips {
 					value.modify(1.3, 'Power Spot');
 				} else if (allyAbility === 'Steely Spirit' && moveType === 'Steel') {
 					value.modify(1.5, 'Steely Spirit');
+				} else if (allyAbility === 'Pack Hunter' && ally !== pokemon) {
+					value.modify(1.5, 'Pack Hunter');
 				}
 			}
 			for (const foe of pokemon.side.foe.active) {
