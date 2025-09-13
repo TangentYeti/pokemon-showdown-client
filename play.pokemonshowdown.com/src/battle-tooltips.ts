@@ -2136,7 +2136,7 @@ export class BattleTooltips {
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");
 		}
-		if (move.type['water']) {
+		if (move.type === 'water') {
 			value.abilityModify(1.2, 'Aquapotent');
 		}
 		if (move.flags['punch']) {
