@@ -2127,6 +2127,12 @@ export class BattleTooltips {
 		if (pokemon.ability === 'exectutioner' && target && target.hp * 2 <= target.maxhp) {
 			value.abilityModify(2, 'Executioner');
 		}
+		if (pokemon.ability === 'eldrich') {
+			value.abilityModify(0.5, 'Eldrich');
+		}
+		if (pokemon.ability === 'bodycount') {
+			value.abilityModify(0.333, 'Body Count');
+		}
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");
 		}
