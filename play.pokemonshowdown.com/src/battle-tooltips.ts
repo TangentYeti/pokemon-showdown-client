@@ -2133,7 +2133,7 @@ export class BattleTooltips {
 		if (!value.value) return value;
 
 		// Other ability boosts
-		if (pokemon.ability === 'exectutioner' && target && target.hp * 2 <= target.maxhp) {
+		if (pokemon.ability === 'exectutioner' && target.hp * 2 <= target.maxhp) {
 			value.abilityModify(2, 'Executioner');
 		}
 		if (pokemon.ability === 'eldrich' && move.category === 'Special') {
