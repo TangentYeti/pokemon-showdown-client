@@ -2172,9 +2172,9 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
-		// if (move.volatileStatus['partiallytrapped']) {
-		// 	value.abilityModify(1.5, 'Constriction');
-		// }
+		if (move.volatileStatus === 'partiallytrapped') {
+			value.abilityModify(1.5, 'Constriction');
+		}
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
 		}
@@ -2191,7 +2191,7 @@ export class BattleTooltips {
 		}
 		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
 			if (pokemon.volatiles[`fallen${i}`]) {
-				value.abilityModify(0.33, "Body Count");
+				value.abilityModify(0.333, "Body Count");
 			}
 		}
 		if (target) {
