@@ -2133,9 +2133,9 @@ export class BattleTooltips {
 		if (!value.value) return value;
 
 		// Other ability boosts
-		if (target.hp * 2 <= target.maxhp) {
-			value.abilityModify(2, 'Executioner');
-		}
+		// if (target.hp * 2 <= target.maxhp) {
+		// 	value.abilityModify(2, 'Executioner');
+		// }
 		if (move.category === 'Special') {
 			value.abilityModify(0.5, 'Eldrich');
 		}
@@ -2189,11 +2189,11 @@ export class BattleTooltips {
 				value.abilityModify(1 + 0.1 * i, "Supreme Overlord");
 			}
 		}
-		// for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
-		// 	if (pokemon.volatiles[`fallen${i}`]) {
-		// 		value.abilityModify(0.33, "Body Count");
-		// 	}
-		// }
+		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
+			if (pokemon.volatiles[`fallen${i}`]) {
+				value.abilityModify(0.33, "Body Count");
+			}
+		}
 		if (target) {
 			if (["MF", "FM"].includes(pokemon.gender + target.gender)) {
 				value.abilityModify(0.75, "Rivalry");
