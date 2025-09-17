@@ -2133,9 +2133,9 @@ export class BattleTooltips {
 		if (!value.value) return value;
 
 		// Other ability boosts
-		// if (target.hp * 2 <= target.maxhp) {
-		// 	value.abilityModify(2, 'Executioner');
-		// }
+		if (target.hp * 2 <= target.maxhp) {
+			value.abilityModify(2, 'Executioner');
+		}
 		if (move.category === 'Special') {
 			value.abilityModify(0.5, 'Eldrich');
 		}
@@ -2172,9 +2172,9 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
-		if (move.volatileStatus['partiallytrapped']) {
-			value.abilityModify(1.5, 'Constriction');
-		}
+		// if (move.volatileStatus['partiallytrapped']) {
+		// 	value.abilityModify(1.5, 'Constriction');
+		// }
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
 		}
