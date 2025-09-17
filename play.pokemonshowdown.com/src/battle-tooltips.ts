@@ -2172,9 +2172,9 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
-		if (move.volatileStatus === 'partiallytrapped') {
-			value.abilityModify(1.5, 'Constriction');
-		}
+		// if (move.volatileStatus === 'partiallytrapped') {
+		// 	value.abilityModify(1.5, 'Constriction');
+		// }
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
 		}
