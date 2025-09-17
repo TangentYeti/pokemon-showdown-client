@@ -1627,7 +1627,7 @@ export class BattleTooltips {
 				moveType = 'Flying';
 				break;
 			case 'overcast':
-				moveType = 'Ghost';
+				moveType = 'Normal';
 				break;
 			}
 		}
@@ -2177,6 +2177,9 @@ export class BattleTooltips {
 		}
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
+		}
+		if (move.flags['contact']) {
+			value.abilityModify(1.3, "Impaler");
 		}
 		if (move.flags['sound']) {
 			value.abilityModify(1.3, "Punk Rock");
