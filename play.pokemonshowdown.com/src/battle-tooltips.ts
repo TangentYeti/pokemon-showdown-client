@@ -785,6 +785,9 @@ export class BattleTooltips {
 			if (move.flags.wind) {
 				text += `<p class="movetag">&#x2713; Wind <small>(activates Wind Power and Wind Rider)</small></p>`;
 			}
+			if (move.flags.punch && move.type.water && ability === 'aquapotent') {
+				text += `<p class="movetag">&#x2713; Fist <small>(boosted by Aquapotent)</small></p>`;
+			}
 			// RBY healing move glitch
 			if (this.battle.gen === 1 && !toID(this.battle.tier).includes('stadium') &&
 				['recover', 'softboiled', 'rest'].includes(move.id)) {
@@ -2172,6 +2175,9 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
+		if (move.volatileStatus === 'partiallytrapped') {
+			value.abilityModify(1.5, 'Constriction');
+		}
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
 		}
@@ -2193,6 +2199,7 @@ export class BattleTooltips {
 				value.abilityModify(1.25, "Rivalry");
 			}
 		}
+
 		const noTypeOverride = [
 			'judgment', 'multiattack', 'naturalgift', 'revelationdance', 'struggle', 'technoblast', 'terrainpulse', 'weatherball',
 		];
