@@ -1274,6 +1274,9 @@ export class BattleTooltips {
 		if (item === 'guardcharm') {
 			stats.def = Math.floor(stats.def * 1.3);
 		}
+		if (item === 'hexcharm') {
+			stats.spd = Math.floor(stats.spd * 1.3);
+		}
 		if (item === 'deepseascale' && species === 'Clamperl') {
 			stats.spd *= 2;
 		}
@@ -2509,6 +2512,9 @@ export class BattleTooltips {
 			itemName === 'Wise Glasses' && move.category === 'Special' ||
 			itemName === 'Punching Glove' && move.flags['punch']) {
 			value.itemModify(1.1);
+		}
+		if (itemName === 'Megaphone' && move.flags['sound']) {
+			value.itemModify(1.3);
 		}
 
 		return value;
