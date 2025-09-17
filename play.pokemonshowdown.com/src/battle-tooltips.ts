@@ -2172,14 +2172,11 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
-		// if (move.volatileStatus['partiallytrapped']) {
-		// 	value.abilityModify(1.5, 'Constriction');
-		// }
-		if (move.flags['contact']) {
-			value.abilityModify(1.3, "Tough Claws");
+		if (move.volatileStatus['partiallytrapped']) {
+			value.abilityModify(1.5, 'Constriction');
 		}
 		if (move.flags['contact']) {
-			value.abilityModify(1.3, "Impaler");
+			value.abilityModify(1.3, "Tough Claws");
 		}
 		if (move.flags['sound']) {
 			value.abilityModify(1.3, "Punk Rock");
