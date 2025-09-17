@@ -2139,9 +2139,6 @@ export class BattleTooltips {
 		if (pokemon.ability === 'eldrich') {
 			value.abilityModify(0.5, 'Eldrich');
 		}
-		if (pokemon.ability === 'bodycount') {
-			value.abilityModify(0.333, 'Body Count');
-		}
 		if (pokemon.status === 'brn' && move.category === 'Special') {
 			value.abilityModify(1.5, "Flare Boost");
 		}
@@ -2175,7 +2172,7 @@ export class BattleTooltips {
 		if (move.secondaries) {
 			value.abilityModify(1.3, "Sheer Force");
 		}
-		if (move.volatileStatus === 'partiallytrapped') {
+		if (move.volatileStatus['partiallytrapped']) {
 			value.abilityModify(1.5, 'Constriction');
 		}
 		if (move.flags['contact']) {
@@ -2190,6 +2187,11 @@ export class BattleTooltips {
 		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
 			if (pokemon.volatiles[`fallen${i}`]) {
 				value.abilityModify(1 + 0.1 * i, "Supreme Overlord");
+			}
+		}
+		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
+			if (pokemon.volatiles[`fallen${i}`]) {
+				value.abilityModify(0.33, "Body Count");
 			}
 		}
 		if (target) {
