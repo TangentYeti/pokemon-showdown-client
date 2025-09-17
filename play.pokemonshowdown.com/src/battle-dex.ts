@@ -628,6 +628,23 @@ export const Dex = new class implements ModdedDex {
 		//     This defaults to graphicsGen, but if the graphicsGen doesn't have a sprite for the Pokemon
 		//     (eg. Darmanitan in graphicsGen 2) then we go up gens until it exists.
 		//
+		if (species.tags.includes("Use Gen 5")) {
+			if (isFront) spriteData.url = `https://play.pokemonshowdown.com/sprites/gen5${options.shiny ? '-shiny' : ''}/${species.id}.png`;
+			else if (!isFront) spriteData.url = `https://play.pokemonshowdown.com/sprites/gen5-back${options.shiny ? '-shiny' : ''}/${species.id}.png`;
+			else spriteData.url = `https://play.pokemonshowdown.com/sprites/dex${options.shiny ? '-shiny' : ''}/${species.id}.png`;
+			spriteData.pixelated = true;
+			spriteData.gen = 5;
+			return spriteData;
+		}
+		if (species.tags.includes("Fakemon")) {
+			if (isFront) spriteData.url = `https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/${options.shiny ? 'shiny-' : ''}front/${species.id}.png`;
+			else if (!isFront && species.tags.includes("Has Back Sprite")) spriteData.url = `https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/${options.shiny ? 'shiny-' : ''}back/${species.id}.png`;
+			else spriteData.url = `https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/${options.shiny ? 'shiny-' : ''}front/${species.id}.png`
+			spriteData.pixelated = true;
+			spriteData.gen = 5;
+			return spriteData;
+		}
+
 		let graphicsGen = mechanicsGen;
 		if (Dex.prefs('nopastgens')) graphicsGen = 6;
 		if (Dex.prefs('bwgfx') && graphicsGen >= 6) graphicsGen = 5;
@@ -823,11 +840,14 @@ export const Dex = new class implements ModdedDex {
 		}
 		let num = this.getPokemonIconNum(id, pokemon?.gender === 'F', facingLeft);
 
-		let top = Math.floor(num / 12) * 30;
+	let top = Math.floor(num / 12) * 30;
 		let left = (num % 12) * 40;
-		let fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ?
-			`;opacity:.3;filter:grayscale(100%) brightness(.5)` : ``);
-		return `background:transparent url(${Dex.resourcePrefix}sprites/pokemonicons-sheet.png?v19) no-repeat scroll -${left}px -${top}px${fainted}`;
+		let fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ? `;opacity:.3;filter:grayscale(100%) brightness(.5)` : ``);
+		let species = Dex.species.get(id);
+    	if (species.tags.includes("Fakemon")) {
+      		return `background:transparent url(https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/front/${id}.png) no-repeat scroll;background-size:contain;width:40px;background-position:center${fainted}`
+    	}
+		return `background:transparent url(${Dex.resourcePrefix}sprites/pokemonicons-sheet.png?v16) no-repeat scroll -${left}px -${top}px${fainted}`;
 	}
 
 	getTeambuilderSpriteData(pokemon: any, dex: ModdedDex = Dex): TeambuilderSpriteData {
@@ -892,6 +912,10 @@ export const Dex = new class implements ModdedDex {
 				spriteData.x = -2;
 				spriteData.y = 0;
 			}
+			if(Dex.species.get(pokemon.species).tags.includes("Fakemon")) {
+        		spriteData.x = -3;
+        		spriteData.y = -2;
+      		}
 			return spriteData;
 		}
 		spriteData.spriteDir = 'sprites/gen5';
@@ -904,27 +928,38 @@ export const Dex = new class implements ModdedDex {
 		return spriteData;
 	}
 
-	getTeambuilderSprite(pokemon: any, dex?: ModdedDex, xOffset = 0, yOffset = 0) {
+	getTeambuilderSprite(pokemon: any, gen: number = 0) {
 		if (!pokemon) return '';
-		const data = this.getTeambuilderSpriteData(pokemon, dex);
+		const data = this.getTeambuilderSpriteData(pokemon, gen);
 		const shiny = (data.shiny ? '-shiny' : '');
-		const resize = (data.h ? `background-size:${data.h}px` : '');
-		return `background-image:url(${Dex.resourcePrefix}${data.spriteDir}${shiny}/${data.spriteid}.png);background-position:${data.x + xOffset}px ${data.y + yOffset}px;background-repeat:no-repeat;${resize}`;
+		if (Dex.species.get(pokemon.species).tags.includes("Use Gen 5")) {
+			let url = `https://play.pokemonshowdown.com/sprites/gen5/${toID(pokemon.species)}.png`;
+			return `background-image:url(${url});background-position:${data.x}px ${data.y}px;background-repeat:no-repeat;background-size:100px;`;
+		}
+		if (Dex.species.get(pokemon.species).tags.includes("Fakemon")) {
+			let url = `https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/${data.shiny ? 'shiny-' : ''}front/${toID(pokemon.species)}.png`
+			return `background-image:url(${url});background-position:${data.x}px ${data.y}px;background-repeat:no-repeat;background-size:100px;`;
+		}
+		return 'background-image:url(' + Dex.resourcePrefix + data.spriteDir + shiny + '/' + data.spriteid + '.png);background-position:' + data.x + 'px ' + data.y + 'px;background-repeat:no-repeat';
 	}
 
 	getItemIcon(item: any) {
 		let num = 0;
-		if (typeof item === 'string' && window.BattleItems) item = window.BattleItems[toID(item)];
+		if (typeof item === 'string' && exports.BattleItems) item = exports.BattleItems[toID(item)];
 		if (item?.spritenum) num = item.spritenum;
-
+		if (num === -100) {
+			let url = `https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/items/${toID(item.name)}.png`
+			return `background:transparent url(${url}) no-repeat`;
+		}
 		let top = Math.floor(num / 16) * 24;
 		let left = (num % 16) * 24;
-		return `background:transparent url(${Dex.resourcePrefix}sprites/itemicons-sheet.png?v1) no-repeat scroll -${left}px -${top}px`;
+		return 'background:transparent url(' + Dex.resourcePrefix + 'sprites/itemicons-sheet.png?v1) no-repeat scroll -' + left + 'px -' + top + 'px';
 	}
 
 	getTypeIcon(type: string | null, b?: boolean) { // b is just for utilichart.js
 		type = this.types.get(type).name;
 		if (!type) type = '???';
+		if (type === 'Cosmic') return `<img src="https://raw.githubusercontent.com/tangentyeti/fakemon-sprites/main/types/${toID(type)}.png" alt="${type}" height="14" width="32" class="pixelated${b ? 'b' : ''}" />`;
 		let sanitizedType = type.replace(/\?/g, '%3f');
 		return `<img src="${Dex.resourcePrefix}sprites/types/${sanitizedType}.png" alt="${type}" height="14" width="32" class="pixelated${b ? ' b' : ''}" />`;
 	}
