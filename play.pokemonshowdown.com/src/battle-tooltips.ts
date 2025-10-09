@@ -1280,6 +1280,9 @@ export class BattleTooltips {
 		if (item === 'hexcharm') {
 			stats.spd = Math.floor(stats.spd * 1.3);
 		}
+		if (item === 'vitalitycharm') {
+			stats.hp = Math.floor(stats.hp * 1.3);
+		}
 		if (item === 'deepseascale' && species === 'Clamperl') {
 			stats.spd *= 2;
 		}
